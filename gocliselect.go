@@ -2,9 +2,10 @@ package gocliselect
 
 import (
 	"fmt"
+	"log"
+
 	"github.com/buger/goterm"
 	"github.com/pkg/term"
-	"log"
 )
 
 // Raw input keycodes
@@ -14,27 +15,27 @@ var down byte = 66
 var jDown byte = 106
 var escape byte = 27
 var enter byte = 13
-var keys = map[byte]bool {
-	up: true,
+var keys = map[byte]bool{
+	up:   true,
 	down: true,
 }
 
 type Menu struct {
-	Prompt  	string
-	CursorPos 	int
-	MenuItems 	[]*MenuItem
+	Prompt    string
+	CursorPos int
+	MenuItems []*MenuItem
 	VimKeys   bool
 }
 
 type MenuItem struct {
-	Text     string
-	ID       string
-	SubMenu  *Menu
+	Text    string
+	ID      string
+	SubMenu *Menu
 }
 
 func NewMenu(prompt string) *Menu {
 	return &Menu{
-		Prompt: prompt,
+		Prompt:    prompt,
 		MenuItems: make([]*MenuItem, 0),
 	}
 }
@@ -43,7 +44,7 @@ func NewMenu(prompt string) *Menu {
 func (m *Menu) AddItem(option string, id string) *Menu {
 	menuItem := &MenuItem{
 		Text: option,
-		ID: id,
+		ID:   id,
 	}
 
 	m.MenuItems = append(m.MenuItems, menuItem)
@@ -59,12 +60,12 @@ func (m *Menu) renderMenuItems(redraw bool) {
 		//
 		// This is done by sending a VT100 escape code to the terminal
 		// @see http://www.climagic.org/mirrors/VT100_Escape_Codes.html
-		fmt.Printf("\033[%dA", len(m.MenuItems) -1)
+		fmt.Printf("\033[%dA", len(m.MenuItems)-1)
 	}
 
 	for index, menuItem := range m.MenuItems {
 		var newline = "\n"
-		if index == len(m.MenuItems) - 1 {
+		if index == len(m.MenuItems)-1 {
 			// Adding a new line on the last option will move the cursor position out of range
 			// For out redrawing
 			newline = ""
@@ -89,7 +90,7 @@ func (m *Menu) Display() string {
 		fmt.Printf("\033[?25h")
 	}()
 
-	fmt.Printf("%s\n", goterm.Color(goterm.Bold(m.Prompt) + ":", goterm.CYAN))
+	fmt.Printf("%s\n", goterm.Color(goterm.Bold(m.Prompt)+":", goterm.CYAN))
 
 	m.renderMenuItems(false)
 
@@ -144,4 +145,9 @@ func getInput() byte {
 	}
 
 	return 0
+}
+
+func ClearScreen(lines int) {
+	fmt.Print("\033[2J")          // clear screen
+	fmt.Printf("\033[%dA", lines) // move cursor up
 }
