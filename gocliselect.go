@@ -147,7 +147,9 @@ func getInput() byte {
 	return 0
 }
 
-func ClearScreen(lines int) {
-	fmt.Print("\033[2J")          // clear screen
-	fmt.Printf("\033[%dA", lines) // move cursor up
+// This is done by sending a VT100 escape code to the terminal
+// http://www.climagic.org/mirrors/VT100_Escape_Codes.html
+func ClearScreen() {
+	fmt.Print("\033[2J") // clear screen
+	fmt.Print("\033[H")
 }
