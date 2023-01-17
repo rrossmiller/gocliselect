@@ -147,8 +147,7 @@ func getInput() byte {
 	return 0
 }
 
-// This is done by sending a VT100 escape code to the terminal
-// http://www.climagic.org/mirrors/VT100_Escape_Codes.html
+// https://espterm.github.io/docs/VT100%20escape%20codes.html
 func ClearScreen() {
 	fmt.Print("\033[2J") // clear screen
 	fmt.Print("\033[H")
